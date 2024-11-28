@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anti-Screenshot Web App</title>
+    
+    <!-- Facebook SDK -->
+    <script async defer crossorigin="anonymous" 
+        src="https://connect.facebook.net/en_US/sdk.js"></script>
+
+    <script>
+        // Inisialisasi Facebook SDK
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId      : '2067251710112081',  // Gunakan App ID Anda di sini
+                cookie     : true,
+                xfbml      : true,
+                version    : 'v10.0'
+            });
+
+            FB.AppEvents.logPageView();   
+
+            // Memeriksa status login setelah SDK dimuat
+            FB.getLoginStatus(function(response) {
+                if (response.status === 'connected') {
+                    console.log('User already logged in.');
+                    enableAntiScreenshot();  // Aktifkan jika sudah login
+                } else {
+                    console.log('User not logged in.');
+                }
+            });
+        };
+
+        // Login dengan Facebook
+        function loginWithFacebook() {
+            FB.login(function(response) {
+                if (response.authResponse) {
+                    console.log('Login successful');
+                    alert('Login successful');
+                    enableAntiScreenshot();  // Aktifkan anti-screenshot setelah login
+                } else {
+                    console.log('Login failed');
+                    alert('Login failed');
+                }
+            });
+        }
+
+        // Fungsi Anti-Screenshot
+        function enableAntiScreenshot() {
+            document.getElementById('protectedContent').style.display = 'block';
+
+            var overlay = document.createElement('div');
+            overlay.style.position = 'absolute';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100%';
+            overlay.style.height = '100%';
+            overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
+            overlay.style.zIndex = '9999';
+            overlay.style.pointerEvents = 'none';
+            document.body.appendChild(overlay);
+
+            alert('Anti-Screenshot is enabled! Screenshot is not allowed on this page.');
+        }
+    </script>
+</head>
+<body>
+
+    <h1>Login to Activate Anti-Screenshot</h1>
+    
+    <!-- Tombol Login Facebook -->
+    <button onclick="loginWithFacebook()">Login with Facebook</button>
+
+    <!-- Konten Terproteksi -->
+    <div id="protectedContent" style="display:none;">
+        <h2>Protected Content</h2>
+        <p>This content is only visible after login!</p>
+    </div>
+
+</body>
+</html>
